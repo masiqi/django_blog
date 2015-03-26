@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0"><object pk="1" model="member.user"></object><object pk="2" model="member.user"></object><object pk="3" model="member.user"></object><object pk="4" model="member.user"></object><object pk="5" model="member.user"></object></django-objects>

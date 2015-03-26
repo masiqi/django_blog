@@ -1,0 +1,75 @@
+{% extends "blog/base.html" %}
+{% load pagination_tags %}
+
+{% block title %}{% if category %}{{ category.name }}-{% endif %}{% if tag %}{{ tag.name}}-{% endif %}{{ usersettings.name }}-{{ username }}-金融界博客{% endblock %}
+
+{% block csszone %}
+{% include "blog/csszone_2.html" %}
+{% endblock %}
+
+{% block rsszone %}
+{% include "blog/rsszone_2.html" %}
+{% endblock %}
+
+{% block body_header %}
+{% include "blog/body_header_2.html" %}
+{% endblock %}
+
+{% block body_content %}
+<div id="main" class="clearfix">
+	<div id="container">
+		<div id="content">
+		{% if category %}<h2 class="pagetitle">Archive for the {{ category.name }} Category</h2>{% endif %}
+<div class="navigation clearfix">
+	<div class="alignleft"></div>
+	<div class="alignright"></div>
+</div>
+
+{% autopaginate blogs usersettings.entries %}
+{% for blog in blogs %}
+	<div class="post-{{ blog.id }} post hentry category-{{ blog.category.name }}" id="post-{{ blog.id }}">
+				<h1><a href="{% url blog_read blog.id %}" rel="bookmark" title="Permanent Link to {{ blog.title }}">{{ blog.title }}</a></h1>
+				<small class="meta">
+          <span class="alignleft">{{ blog.created_at|date:"D d M Y" }}{% ifequal perm 3 %}| <a class="post-edit-link" href="{% url blog_edit blog.id %}" title="Edit post">Edit</a>{% endifequal %}</span>
+           <a href="{% url blog_read blog.id %}#comments" class="alignright button-style" rel="nofollow"> {{ blog.comments.count }} comments &#187; </a>
+        </small>
+
+				<div class="entry">
+				{% ifequal usersettings.display 0 %}
+                                        <p>{{ blog.content|truncatewords:100 }}</p>
+                                {% endifequal %}
+                                {% ifequal usersettings.display 1 %}
+                                        <p>{{ blog.summary|truncatewords:100 }}</p>
+                                {% endifequal %}
+				</div>
+
+				<div class="postmetadata clearfix">
+	<p class="commentslink alignright">
+		<a href="{% url blog_read blog.id %}#comments" rel="nofollow">{{ blog.comments.count }} comments &#187;</a>  
+	</p>
+	<p class="categories">
+	Posted in <a href="{% url blog_user_category blog.category.id %}" title="View all posts in {{ blog.category.name }}" rel="category">{{ blog.category.name }}</a>
+	</p>
+	{% if blog.tags %}
+        <p class="tags">Tags:
+        {% load tagging_tags %}
+        {% tags_for_object blog as tags %}
+        {% for tag in tags %}
+        <a href="{% url blog_user_tag tag.id %}">{{ tag }}</a>
+        {% endfor %}
+	</p>
+        {% endif %}
+	</div>
+	</div>
+{% endfor %}
+		</div><!-- #content -->
+	</div><!-- #container -->
+{% endblock %}
+
+{% block body_sidebar %}
+{% include "blog/body_sidebar_2.html" %}
+{% endblock %}
+
+{% block body_footer %}
+{% include "blog/body_footer_2.html" %}
+{% endblock %}

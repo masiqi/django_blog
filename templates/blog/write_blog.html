@@ -1,0 +1,32 @@
+{% extends "blog/base.html" %}
+{% load pagination_tags %}
+
+{% block title %}写博客-{{ usersettings.name }}-{{ username }}-金融界博客{% endblock %}
+
+{% block csszone %}
+{% include "blog/csszone_1.html" %}
+{% endblock %}
+
+{% block rsszone %}
+{% include "blog/rsszone_1.html" %}
+{% endblock %}
+
+{% block body_header %}
+{% include "blog/body_header_1.html" %}
+{% endblock %}
+
+{% block body_content %}
+
+	<div id="content" class="widecolumn" role="main">
+	<form method="post" action="/write">
+	{{ form.as_ul }}
+	<div class="submit"><input type="submit" value="write" /></div>
+	</form>
+	</div>
+
+
+{% endblock %}
+
+{% block body_footer %}
+{% include "blog/body_footer_1.html" %}
+{% endblock %}

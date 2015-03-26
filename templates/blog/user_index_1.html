@@ -1,0 +1,64 @@
+{% extends "blog/base.html" %}
+{% load pagination_tags %}
+
+{% block title %}{% if category %}{{ category.name }}-{% endif %}{% if tag %}{{ tag.name}}-{% endif %}{{ usersettings.name }}-{{ username }}-金融界博客{% endblock %}
+
+{% block csszone %}
+{% include "blog/csszone_1.html" %}
+{% endblock %}
+
+{% block rsszone %}
+{% include "blog/rsszone_1.html" %}
+{% endblock %}
+
+{% block body_header %}
+{% include "blog/body_header_1.html" %}
+{% endblock %}
+
+{% block body_content %}
+	<div id="content" class="narrowcolumn" role="main">
+	{% if category %}<h2 class="pagetitle">Archive for the {{ category.name }} Category</h2>{% endif %} 
+	{% autopaginate blogs usersettings.entries %}
+	{% for blog in blogs %}
+			<div class="post-{{ blog.id }} post hentry category-{{ blog.category.name }}" id="post-{{ blog.id }}">
+				<h2><a href="{% url blog_read blog.id %}" rel="bookmark" title="Permanent Link to {{ blog.title }}">{{ blog.title }}</a></h2>
+				<small>{{ blog.created_at|date:"D d M Y" }}</small>
+
+				<div class="entry">
+				{% ifequal usersettings.display 0 %}
+					<p>{{ blog.content|truncatewords:100 }}</p>
+				{% endifequal %}
+				{% ifequal usersettings.display 1 %}
+					<p>{{ blog.summary|truncatewords:100 }}</p>
+				{% endifequal %}
+		</div>
+
+				<p class="postmetadata">
+				{% if blog.tags %}
+				Tags:
+				{% load tagging_tags %}
+    				{% tags_for_object blog as tags %}
+        			{% for tag in tags %}
+				<a href="{% url blog_user_tag tag.id %}">{{ tag }}</a>
+  				{% endfor %}
+				<br />
+				{% endif %}
+				 Posted in <a href="{% url blog_user_category blog.category.id %}" title="View all posts in {{ blog.category.name }}" rel="category">{{ blog.category.name }}</a> {% ifequal perm 3 %}| <a class="post-edit-link" href="{% url blog_edit blog.id %}" title="Edit post">Edit</a>{% endifequal %} |   <a href="{% url blog_read blog.id %}#comments" title="Comment on {{ blog.title }}">{{ blog.comments.count }} Comment &#187;</a></p>
+			</div>
+	{% endfor %}
+	{% paginate %}
+
+		<div class="navigation">
+			<div class="alignleft"></div>
+			<div class="alignright"></div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block body_sidebar %}
+{% include "blog/body_sidebar_1.html" %}
+{% endblock %}
+
+{% block body_footer %}
+{% include "blog/body_footer_1.html" %}
+{% endblock %}
